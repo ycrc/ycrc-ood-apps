@@ -1,0 +1,24 @@
+BootStrap: docker
+From: centos:7
+
+%apprun R
+  exec R "${@}"
+
+%apprun Rscript
+  exec Rscript "${@}"
+
+%runscript
+  exec R "${@}"
+
+%post
+  yum install wget -y
+  wget https://download2.rstudio.org/server/centos7/x86_64/rstudio-server-rhel-1.4.1717-x86_64.rpm
+  yum install rstudio-server-rhel-1.4.1717-x86_64.rpm -y
+  yum groupinstall "Development tools" -y # install developement tools for users to build packages
+  # the following packages are required by rgdal
+  yum install xerces-c.x86_64 xerces-c-devel.x86_64 -y
+  yum install libjpeg-turbo libjpeg-turbo-devel -y
+  # for s2
+  yum install openssl.x86_64 openssl-devel.x86_64 openssl-libs -y
+  # for sf
+  yum install sqlite-devel.x86_64 -y
